@@ -40,6 +40,8 @@ rust_binary {
         "libanyhow",
         "libprofcollectd",
     ],
+
+    ld_flags: ["-Wl,--no-fatal-warnings"],
 }
 
 rust_binary {
@@ -51,6 +53,8 @@ rust_binary {
         "libanyhow",
         "libprofcollectd",
     ],
+
+    ld_flags: ["-Wl,--no-fatal-warnings"],
 
     init_rc: ["profcollectd.rc"],
 }
