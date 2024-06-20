@@ -22,11 +22,15 @@
 #include <uapi/asm-x86/asm/perf_regs.h>
 #define perf_event_arm_regs perf_event_arm64_regs
 #include <uapi/asm-arm64/asm/perf_regs.h>
+#define perf_event_loongarch_regs perf_event_loongarch64_regs
+#include <uapi/asm-loongarch64/asm/perf_regs.h>
 #else
 #include <asm-arm/asm/perf_regs.h>
 #include <asm-x86/asm/perf_regs.h>
 #define perf_event_arm_regs perf_event_arm64_regs
 #include <asm-arm64/asm/perf_regs.h>
+#define perf_event_loongarch_regs perf_event_loongarch64_regs
+#include <asm-loongarch64/asm/perf_regs.h>
 #endif
 
 #include <stdint.h>
@@ -42,6 +46,8 @@ enum ArchType {
   ARCH_X86_64,
   ARCH_ARM,
   ARCH_ARM64,
+  ARCH_LOONGARCH,
+  ARCH_LOONGARCH64,
   ARCH_UNSUPPORTED,
 };
 

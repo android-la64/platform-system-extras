@@ -55,6 +55,11 @@ static EventTypeStatus IsEventTypeSupported(const EventType& event_type) {
       GetBuildArch() != ARCH_ARM64) {
     return EventTypeStatus::NOT_SUPPORTED;
   }
+
+  if (event_type.limited_arch == "loongarch" && GetBuildArch() != ARCH_LOONGARCH &&
+      GetBuildArch() != ARCH_LOONGARCH64) {
+    return EventTypeStatus::NOT_SUPPORTED;
+  }
   // Because the kernel may not check whether the raw event is supported by the cpu pmu.
   // We can't decide whether the raw event is supported by calling perf_event_open().
   // Instead, we can check if it can collect some real number.
