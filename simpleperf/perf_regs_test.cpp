@@ -22,9 +22,10 @@ using namespace simpleperf;
 
 // @CddTest = 6.1/C-0-2
 TEST(RegSet, arch) {
-  ArchType arch_pairs[3][2] = {
+  ArchType arch_pairs[4][2] = {
       {ARCH_X86_32, ARCH_X86_64},
       {ARCH_ARM, ARCH_ARM64},
+      {ARCH_LOONGARCH64, ARCH_LOONGARCH64},
       {ARCH_RISCV64, ARCH_RISCV64},
   };
   for (ArchType* arch_pair : arch_pairs) {

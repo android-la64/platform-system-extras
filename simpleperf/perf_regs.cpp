@@ -38,6 +38,8 @@ ArchType GetArchType(const std::string& arch) {
     return ARCH_RISCV64;
   } else if (arch == "aarch64") {
     return ARCH_ARM64;
+  } else if (arch == "loongarch64") {
+    return ARCH_LOONGARCH64;
   } else if (android::base::StartsWith(arch, "arm")) {
     // If arch is "armv8l", it is likely that we are using a 32-bit simpleperf
     // binary on a aarch64 device. In this case, the profiling environment is
@@ -83,6 +85,8 @@ std::string GetArchString(ArchType arch) {
       return "arm64";
     case ARCH_ARM:
       return "arm";
+    case ARCH_LOONGARCH64:
+      return "loongarch64";
     case ARCH_RISCV64:
       return "riscv64";
     default:
@@ -103,6 +107,8 @@ uint64_t GetSupportedRegMask(ArchType arch) {
       return ((1ULL << PERF_REG_ARM_MAX) - 1);
     case ARCH_ARM64:
       return ((1ULL << PERF_REG_ARM64_MAX) - 1);
+    case ARCH_LOONGARCH64:
+      return ((1ULL << PERF_REG_LOONGARCH_MAX) - 1);
     case ARCH_RISCV64:
       return ((1ULL << PERF_REG_RISCV_MAX) - 1);
     default:
@@ -166,6 +172,11 @@ static std::unordered_map<size_t, std::string> riscv64_reg_map = {
     {PERF_REG_RISCV_T6, "t6"},
 };
 
+static std::unordered_map<size_t, std::string> loongarch64_reg_map = {
+    {PERF_REG_LOONGARCH_PC, "pc"},
+};
+
+
 std::string GetRegName(size_t regno, ArchType arch) {
   // Cast regno to int type to avoid -Werror=type-limits.
   int reg = static_cast<int>(regno);
@@ -201,6 +212,14 @@ std::string GetRegName(size_t regno, ArchType arch) {
     case ARCH_RISCV64: {
       auto it = riscv64_reg_map.find(reg);
       CHECK(it != riscv64_reg_map.end()) << "unknown reg " << reg;
+      return it->second;
+    }
+    case ARCH_LOONGARCH64: {
+      if (reg >= PERF_REG_LOONGARCH_R1 && reg <= PERF_REG_LOONGARCH_R31) {
+        return android::base::StringPrintf("r%d", reg - PERF_REG_LOONGARCH_PC);
+      }
+      auto it = loongarch64_reg_map.find(reg);
+      CHECK(it != loongarch64_reg_map.end()) << "unknown reg " << reg;
       return it->second;
     }
     default:
@@ -249,6 +268,9 @@ bool RegSet::GetSpRegValue(uint64_t* value) const {
     case ARCH_RISCV64:
       regno = PERF_REG_RISCV_SP;
       break;
+    case ARCH_LOONGARCH64:
+      regno = PERF_REG_LOONGARCH_R3;
+      break;
     default:
       return false;
   }
@@ -270,6 +292,9 @@ bool RegSet::GetIpRegValue(uint64_t* value) const {
       break;
     case ARCH_RISCV64:
       regno = PERF_REG_RISCV_PC;
+      break;
+    case ARCH_LOONGARCH64:
+      regno = PERF_REG_LOONGARCH_PC;
       break;
     default:
       return false;

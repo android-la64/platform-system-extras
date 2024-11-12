@@ -22,6 +22,8 @@
 #undef PERF_REG_EXTENDED_MASK
 #include <uapi/asm-x86/asm/perf_regs.h>
 #undef PERF_REG_EXTENDED_MASK
+#include <uapi/asm-loongarch/asm/perf_regs.h>
+#undef PERF_REG_EXTENDED_MASK
 #include <uapi/asm-riscv/asm/perf_regs.h>
 #undef PERF_REG_EXTENDED_MASK
 #define perf_event_arm_regs perf_event_arm64_regs
@@ -31,6 +33,8 @@
 #include <asm-arm/asm/perf_regs.h>
 #undef PERF_REG_EXTENDED_MASK
 #include <asm-x86/asm/perf_regs.h>
+#undef PERF_REG_EXTENDED_MASK
+#include <asm-loongarch/asm/perf_regs.h>
 #undef PERF_REG_EXTENDED_MASK
 #include <asm-riscv/asm/perf_regs.h>
 #undef PERF_REG_EXTENDED_MASK
@@ -52,6 +56,7 @@ enum ArchType {
   ARCH_X86_64,
   ARCH_ARM,
   ARCH_ARM64,
+  ARCH_LOONGARCH64,
   ARCH_RISCV64,
   ARCH_UNSUPPORTED,
 };
@@ -65,6 +70,8 @@ constexpr ArchType GetTargetArch() {
   return ARCH_ARM64;
 #elif defined(__arm__)
   return ARCH_ARM;
+#elif defined(__loongarch64)
+  return ARCH_LOONGARCH64;
 #elif defined(__riscv)
   return ARCH_RISCV64;
 #else
